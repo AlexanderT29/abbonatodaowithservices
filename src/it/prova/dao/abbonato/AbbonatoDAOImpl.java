@@ -285,12 +285,17 @@ public class AbbonatoDAOImpl extends AbstractMySQLDAO implements AbbonatoDAO{
 
         ArrayList<Abbonato> result = new ArrayList<Abbonato>();
 
-        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("SELECT DISTINCT nome, cognome, datadinascita FROM abbonato WHERE datastipula >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH);")) {
+        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("SELECT * FROM abbonato WHERE datacessazione < datastipula;")) {
             while (rs.next()) {
                 Abbonato abbonatoTemp = new Abbonato();
+                abbonatoTemp.setId(rs.getLong("id"));
                 abbonatoTemp.setNome(rs.getString("nome"));
                 abbonatoTemp.setCognome(rs.getString("cognome"));
                 abbonatoTemp.setDatadinascita(rs.getDate("datadinascita").toLocalDate());
+                abbonatoTemp.setDatastipula(rs.getDate("datastipula") != null ?
+                        rs.getDate("datastipula").toLocalDate() : null);
+                abbonatoTemp.setDatacessazione(rs.getDate("datacessazione") != null ?
+                        rs.getDate("datacessazione").toLocalDate() : null);
                 result.add(abbonatoTemp);
             }
         } catch (Exception e) {

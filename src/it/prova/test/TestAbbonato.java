@@ -36,22 +36,27 @@ public class TestAbbonato {
             testRimuovi(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
-            // GET - test GetAbbonatoChePagaDiPiuAlMese
+            // GET - test getAbbonatoChePagaDiPiuAlMese
             testGetAbbonatoChePagaDiPiuAlMese(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
-            // GET - test GetQuantiAttiviTraDueDate
+            // GET - test getQuantiAttiviTraDueDate
             testGetQuantiAttiviTraDueDate(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
 
-            // GET - test GetAbbonatiDistintiUltimiSeiMesi
+            // GET - test getAbbonatiDistintiUltimiSeiMesi
             testGetAbbonatiDistintiUltimiSeiMesi(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
             // GET - test getConCognomeOverEtaEDisdettaDopoData
             testGetConCognomeOverEtaEDisdettaDopoData(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
+
+            // GET - test getSituazioniAnomale
+            testGetSituazioniAnomale(abbonatoService);
+            System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
+
 
 
         } catch (Exception e) {
@@ -175,6 +180,17 @@ public class TestAbbonato {
         System.out.println("Trovati " + prova.size() + " abbonati.");
         System.out.println(".......testGetConCognomeOverEtaEDisdettaDopoData PASSED.............");
 
+    }
+
+    public static void testGetSituazioniAnomale(AbbonatoService abbonatoService) throws Exception{
+        System.out.println(".......testGetSituazioniAnomale inizio.............");
+        List<Abbonato> prova = null;
+        prova = abbonatoService.getSituazioniAnomale();
+        if(prova == null){
+            throw new RuntimeException("testGetSituazioniAnomale FAILED");
+        }
+        System.out.println("Trovati " + prova.size() + " abbonati.");
+        System.out.println(".......testGetSituazioniAnomale PASSED.............");
     }
 
 }

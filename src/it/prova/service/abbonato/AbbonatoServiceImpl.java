@@ -202,6 +202,23 @@ public class AbbonatoServiceImpl implements AbbonatoService {
         return result;
     }
 
+    public List<Abbonato> getSituazioniAnomale() throws Exception{
+        List<Abbonato> result = new ArrayList<Abbonato>();
+        try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+            // inietto la connection nel dao
+            abbonatoDAO.setConnection(connection);
+
+            // eseguo quello che realmente devo fare
+            result = abbonatoDAO.getSituazioniAnomale();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+    }
+
 
 
 }
