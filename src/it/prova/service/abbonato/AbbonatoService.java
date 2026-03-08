@@ -18,4 +18,6 @@ public interface AbbonatoService {
     public int inserisciNuovo(Abbonato input) throws Exception;
 
     public int rimuovi(Long idDaRimuovere) throws Exception;
+
+    public Abbonato getAbbonatoChePagaDiPiuAlMese() throws Exception;
 }

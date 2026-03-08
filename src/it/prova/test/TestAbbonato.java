@@ -35,6 +35,10 @@ public class TestAbbonato {
             testRimuovi(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
+            // GET - test GetAbbonatoChePagaDiPiuAlMese
+            testGetAbbonatoChePagaDiPiuAlMese(abbonatoService);
+            System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,6 +113,17 @@ public class TestAbbonato {
         }
         System.out.println(".......testRimuovi inizio.............");
         return result;
+    }
+
+    public static Abbonato testGetAbbonatoChePagaDiPiuAlMese(AbbonatoService abbonatoService) throws Exception{
+        System.out.println(".......testGetAbbonatoChePagaDiPiuAlMese inizio.............");
+        Abbonato prova = abbonatoService.getAbbonatoChePagaDiPiuAlMese();
+        if (prova == null){
+            throw new RuntimeException("testGetAbbonatoChePagaDiPiuAlMese FAILES");
+        }
+        System.out.println("Abbonato che paga di più: " + prova);
+        System.out.println(".......testGetAbbonatoChePagaDiPiuAlMese PASSED.............");
+        return prova;
     }
 
 }

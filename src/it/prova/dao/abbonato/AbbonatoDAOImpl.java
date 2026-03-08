@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,6 +151,68 @@ public class AbbonatoDAOImpl extends AbstractMySQLDAO implements AbbonatoDAO{
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public Abbonato getAbbonatoChePagaDiPiuAlMese() throws Exception{
+
+        if (isNotActive())
+            throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+
+
+        Abbonato result = null;
+        try (PreparedStatement ps = connection.prepareStatement("select * FROM abbonato WHERE datacessazione IS NULL ORDER BY importomensile DESC LIMIT 1;")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    result = new Abbonato();
+                    result.setNome(rs.getString("nome"));
+                    result.setCognome(rs.getString("cognome"));
+                    result.setImportomensile(rs.getInt("importomensile"));
+                    result.setDatadinascita(rs.getDate("datadinascita") != null ? rs.getDate("datadinascita").toLocalDate() : null);
+                    result.setDatastipula(rs.getDate("datastipula") != null ? rs.getDate("datastipula").toLocalDate() : null);
+                    result.setDatacessazione(rs.getDate("datacessazione") != null ? rs.getDate("datacessazione").toLocalDate() : null);
+                    result.setId(rs.getLong("id"));
+                } else {
+                    result = null;
+                }
+
+            } // niente catch qui
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+    }
+
+    @Override
+    public List<Abbonato> getQuantiAttiviTraDueDate(LocalDate dataInizio, LocalDate dataFine) throws Exception{
+        if(dataFine < dataInizio )
+        if (isNotActive())
+            throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+        ArrayList<Abbonato> result = new ArrayList<Abbonato>();
+
+        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("select * from abbonato")) {
+            while (rs.next()) {
+                Abbonato abbonatoTemp = new Abbonato();
+                abbonatoTemp.setId(rs.getLong("id"));
+                abbonatoTemp.setNome(rs.getString("nome"));
+                abbonatoTemp.setCognome(rs.getString("cognome"));
+                abbonatoTemp.setImportomensile(rs.getInt("importomensile"));
+                abbonatoTemp.setDatadinascita(rs.getDate("datadinascita").toLocalDate());
+                abbonatoTemp.setDatastipula(
+                        rs.getDate("datastipula") != null ? rs.getDate("datastipula").toLocalDate() : null);
+                abbonatoTemp.setDatacessazione(rs.getDate("datacessazione") != null ? rs.getDate("datacessazione").toLocalDate() : null);
+                result.add(abbonatoTemp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+
         }
         return result;
     }
