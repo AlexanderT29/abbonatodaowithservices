@@ -25,4 +25,6 @@ public interface AbbonatoService {
     public List<Abbonato> getQuantiAttiviTraDueDate(LocalDate dataInizio, LocalDate dataFine) throws Exception;
 
     public List<Abbonato> getAbbonatiDistintiUltimiSeiMesi() throws Exception;
+
+    public List<Abbonato> getConCognomeOverEtaEDisdettaDopoData(String cognomeInput, int eta, LocalDate date) throws Exception;
 }

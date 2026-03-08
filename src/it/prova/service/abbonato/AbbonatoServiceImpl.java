@@ -166,7 +166,40 @@ public class AbbonatoServiceImpl implements AbbonatoService {
     }
 
     public List<Abbonato> getAbbonatiDistintiUltimiSeiMesi() throws Exception{
-        return null;
+        List<Abbonato> result = new ArrayList<>();
+        try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+            // inietto la connection nel dao
+            abbonatoDAO.setConnection(connection);
+
+            // eseguo quello che realmente devo fare
+            result = abbonatoDAO.getAbbonatiDistintiUltimiSeiMesi();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+    }
+
+    public List<Abbonato> getConCognomeOverEtaEDisdettaDopoData(String cognomeInput, int eta, LocalDate date) throws Exception{
+        if(cognomeInput == null || cognomeInput == "" || eta <= 18 || date == null){
+            throw new RuntimeException("INPUT NON VALIDO!");
+        }
+        List<Abbonato> result = new ArrayList<>();
+        try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+            // inietto la connection nel dao
+            abbonatoDAO.setConnection(connection);
+
+            // eseguo quello che realmente devo fare
+            result = abbonatoDAO.getConCognomeOverEtaEDisdettaDopoData(cognomeInput, eta, date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
     }
 
 

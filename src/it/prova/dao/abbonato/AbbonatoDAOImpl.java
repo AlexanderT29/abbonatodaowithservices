@@ -232,17 +232,65 @@ public class AbbonatoDAOImpl extends AbstractMySQLDAO implements AbbonatoDAO{
 
         ArrayList<Abbonato> result = new ArrayList<Abbonato>();
 
-        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("SELECT DISTINCT * FROM abbonato WHERE datastipula >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH);")) {
+        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("SELECT DISTINCT nome, cognome, datadinascita FROM abbonato WHERE datastipula >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH);")) {
+            while (rs.next()) {
+                Abbonato abbonatoTemp = new Abbonato();
+                abbonatoTemp.setNome(rs.getString("nome"));
+                abbonatoTemp.setCognome(rs.getString("cognome"));
+                abbonatoTemp.setDatadinascita(rs.getDate("datadinascita").toLocalDate());
+                result.add(abbonatoTemp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+
+        }
+        return result;
+    }
+
+    public List<Abbonato> getConCognomeOverEtaEDisdettaDopoData(String cognomeInput,int eta, LocalDate date) throws Exception{
+        if (isNotActive())
+            throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+        ArrayList<Abbonato> result = new ArrayList<Abbonato>();
+
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM abbonato WHERE cognome = ? AND TIMESTAMPDIFF(YEAR, datadinascita, CURDATE()) >= ? AND datacessazione >= ?;")) {
+            ps.setString(1, cognomeInput);
+            ps.setInt(2, eta);
+            ps.setDate(3, java.sql.Date.valueOf(date));
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Abbonato abbonatoTemp = new Abbonato();
                 abbonatoTemp.setId(rs.getLong("id"));
                 abbonatoTemp.setNome(rs.getString("nome"));
                 abbonatoTemp.setCognome(rs.getString("cognome"));
-                abbonatoTemp.setImportomensile(rs.getInt("importomensile"));
                 abbonatoTemp.setDatadinascita(rs.getDate("datadinascita").toLocalDate());
                 abbonatoTemp.setDatastipula(
                         rs.getDate("datastipula") != null ? rs.getDate("datastipula").toLocalDate() : null);
                 abbonatoTemp.setDatacessazione(rs.getDate("datacessazione") != null ? rs.getDate("datacessazione").toLocalDate() : null);
+                result.add(abbonatoTemp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+
+        }
+        return result;
+    }
+
+    public List<Abbonato> getSituazioniAnomale() throws Exception{
+
+        if (isNotActive())
+            throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+        ArrayList<Abbonato> result = new ArrayList<Abbonato>();
+
+        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("SELECT DISTINCT nome, cognome, datadinascita FROM abbonato WHERE datastipula >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH);")) {
+            while (rs.next()) {
+                Abbonato abbonatoTemp = new Abbonato();
+                abbonatoTemp.setNome(rs.getString("nome"));
+                abbonatoTemp.setCognome(rs.getString("cognome"));
+                abbonatoTemp.setDatadinascita(rs.getDate("datadinascita").toLocalDate());
                 result.add(abbonatoTemp);
             }
         } catch (Exception e) {

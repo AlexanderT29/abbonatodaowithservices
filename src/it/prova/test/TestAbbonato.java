@@ -45,6 +45,15 @@ public class TestAbbonato {
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
 
+            // GET - test GetAbbonatiDistintiUltimiSeiMesi
+            testGetAbbonatiDistintiUltimiSeiMesi(abbonatoService);
+            System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
+
+            // GET - test getConCognomeOverEtaEDisdettaDopoData
+            testGetConCognomeOverEtaEDisdettaDopoData(abbonatoService);
+            System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,6 +154,27 @@ public class TestAbbonato {
 
     }
 
+    public static void testGetAbbonatiDistintiUltimiSeiMesi(AbbonatoService abbonatoService) throws Exception{
+        System.out.println(".......testGetAbbonatiDistintiUltimiSeiMesi inizio.............");
+        List<Abbonato> prova = null;
+        prova = abbonatoService.getAbbonatiDistintiUltimiSeiMesi();
+        if(prova == null){
+            throw new RuntimeException("testGetQuantiAttiviTraDueDate FAILED");
+        }
+        System.out.println("Trovati " + prova.size() + " abbonati.");
+        System.out.println(".......testGetAbbonatiDistintiUltimiSeiMesi PASSED.............");
+    }
 
+    public static void testGetConCognomeOverEtaEDisdettaDopoData(AbbonatoService abbonatoService) throws Exception{
+        System.out.println(".......testGetConCognomeOverEtaEDisdettaDopoData inizio.............");
+        List<Abbonato> prova = null;
+        prova = abbonatoService.getConCognomeOverEtaEDisdettaDopoData("Rossi", 60, LocalDate.of(2021, 01, 02));
+        if (prova == null){
+            throw new RuntimeException("testGetConCognomeOverEtaEDisdettaDopoData FAILED");
+        }
+        System.out.println("Trovati " + prova.size() + " abbonati.");
+        System.out.println(".......testGetConCognomeOverEtaEDisdettaDopoData PASSED.............");
+
+    }
 
 }
