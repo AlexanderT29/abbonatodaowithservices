@@ -3,6 +3,7 @@ package it.prova.service.abbonato;
 import it.prova.dao.abbonato.AbbonatoDAO;
 import it.prova.model.Abbonato;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface AbbonatoService {
@@ -20,4 +21,8 @@ public interface AbbonatoService {
     public int rimuovi(Long idDaRimuovere) throws Exception;
 
     public Abbonato getAbbonatoChePagaDiPiuAlMese() throws Exception;
+
+    public List<Abbonato> getQuantiAttiviTraDueDate(LocalDate dataInizio, LocalDate dataFine) throws Exception;
+
+    public List<Abbonato> getAbbonatiDistintiUltimiSeiMesi() throws Exception;
 }

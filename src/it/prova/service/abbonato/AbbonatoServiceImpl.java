@@ -7,6 +7,7 @@ import it.prova.dao.abbonato.AbbonatoDAOImpl;
 import it.prova.model.Abbonato;
 
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,6 +142,31 @@ public class AbbonatoServiceImpl implements AbbonatoService {
             throw e;
         }
         return result;
+    }
+
+    public List<Abbonato> getQuantiAttiviTraDueDate(LocalDate dataInizio, LocalDate dataFine) throws Exception{
+        if(dataFine.isBefore(dataInizio) ){
+            throw new RuntimeException("LA DATA DI FINE NON PUO' ESSERE MINORE DI QUELLA DI INIZIO!");
+        }
+        List<Abbonato> result = new ArrayList<Abbonato>();
+        try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+            // inietto la connection nel dao
+            abbonatoDAO.setConnection(connection);
+
+            // eseguo quello che realmente devo fare
+            result = abbonatoDAO.getQuantiAttiviTraDueDate(dataInizio, dataFine);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return result;
+
+    }
+
+    public List<Abbonato> getAbbonatiDistintiUltimiSeiMesi() throws Exception{
+        return null;
     }
 
 

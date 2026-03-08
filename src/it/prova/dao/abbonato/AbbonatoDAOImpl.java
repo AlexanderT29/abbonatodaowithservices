@@ -190,13 +190,49 @@ public class AbbonatoDAOImpl extends AbstractMySQLDAO implements AbbonatoDAO{
 
     @Override
     public List<Abbonato> getQuantiAttiviTraDueDate(LocalDate dataInizio, LocalDate dataFine) throws Exception{
-        if(dataFine < dataInizio )
+        if(dataFine.isBefore(dataInizio) ){
+            throw new RuntimeException("LA DATA DI FINE NON PUO' ESSERE MINORE DI QUELLA DI INIZIO!");
+        }
         if (isNotActive())
             throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
 
         ArrayList<Abbonato> result = new ArrayList<Abbonato>();
 
-        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("select * from abbonato")) {
+        try (PreparedStatement ps = connection.prepareStatement("select * from abbonato where datastipula between ? and ? and datacessazione > ?")) {
+
+            ps.setDate(1, java.sql.Date.valueOf(dataInizio));
+            ps.setDate(2, java.sql.Date.valueOf(dataFine));
+            ps.setDate(3, java.sql.Date.valueOf(dataFine));
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Abbonato abbonatoTemp = new Abbonato();
+                abbonatoTemp.setId(rs.getLong("id"));
+                abbonatoTemp.setNome(rs.getString("nome"));
+                abbonatoTemp.setCognome(rs.getString("cognome"));
+                abbonatoTemp.setImportomensile(rs.getInt("importomensile"));
+                abbonatoTemp.setDatadinascita(rs.getDate("datadinascita").toLocalDate());
+                abbonatoTemp.setDatastipula(
+                        rs.getDate("datastipula") != null ? rs.getDate("datastipula").toLocalDate() : null);
+                abbonatoTemp.setDatacessazione(rs.getDate("datacessazione") != null ? rs.getDate("datacessazione").toLocalDate() : null);
+                result.add(abbonatoTemp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+
+        }
+        return result;
+    }
+
+    public List<Abbonato> getAbbonatiDistintiUltimiSeiMesi() throws Exception{
+        if (isNotActive())
+            throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+        ArrayList<Abbonato> result = new ArrayList<Abbonato>();
+
+        try (Statement ps = connection.createStatement(); ResultSet rs = ps.executeQuery("SELECT DISTINCT * FROM abbonato WHERE datastipula >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH);")) {
             while (rs.next()) {
                 Abbonato abbonatoTemp = new Abbonato();
                 abbonatoTemp.setId(rs.getLong("id"));

@@ -11,4 +11,6 @@ public interface AbbonatoDAO extends IBaseDAO<Abbonato> {
     public Abbonato getAbbonatoChePagaDiPiuAlMese() throws Exception;
 
     public List<Abbonato> getQuantiAttiviTraDueDate(LocalDate dataInizio, LocalDate dataFine) throws Exception;
+
+    public List<Abbonato> getAbbonatiDistintiUltimiSeiMesi() throws Exception;
 }

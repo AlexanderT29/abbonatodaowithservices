@@ -5,6 +5,7 @@ import it.prova.service.MyServiceFactory;
 import it.prova.service.abbonato.AbbonatoService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestAbbonato {
@@ -37,6 +38,10 @@ public class TestAbbonato {
 
             // GET - test GetAbbonatoChePagaDiPiuAlMese
             testGetAbbonatoChePagaDiPiuAlMese(abbonatoService);
+            System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
+
+            // GET - test GetQuantiAttiviTraDueDate
+            testGetQuantiAttiviTraDueDate(abbonatoService);
             System.out.println("In tabella ci sono " + abbonatoService.listAll().size() + "elementi.\n");
 
 
@@ -125,5 +130,21 @@ public class TestAbbonato {
         System.out.println(".......testGetAbbonatoChePagaDiPiuAlMese PASSED.............");
         return prova;
     }
+
+    public static void testGetQuantiAttiviTraDueDate(AbbonatoService abbonatoService) throws Exception{
+        System.out.println(".......testGetQuantiAttiviTraDueDate inizio.............");
+        List<Abbonato> prova = new ArrayList<Abbonato>();
+        LocalDate d1 = LocalDate.of(2023, 01, 01);
+        LocalDate d2 = LocalDate.of(2023, 10, 01);
+        prova = abbonatoService.getQuantiAttiviTraDueDate(d1, d2);
+        if (prova == null || prova.size() == 0){
+            throw new RuntimeException("NON CI SONO ABBONATI CHE RISPETTANO I CRITERI DI RICERCA E/O NEL DATABASE!");
+        }
+        System.out.println("Trovati " + prova.size() + " abbonati");
+        System.out.println(".......testGetQuantiAttiviTraDueDate PASSED.............");
+
+    }
+
+
 
 }
