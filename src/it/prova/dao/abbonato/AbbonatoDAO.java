@@ -1,4 +1,7 @@
 package it.prova.dao.abbonato;
 
-public interface AbbonatoDAO {
+import it.prova.dao.IBaseDAO;
+import it.prova.model.Abbonato;
+
+public interface AbbonatoDAO extends IBaseDAO<Abbonato> {
 }
